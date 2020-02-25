@@ -28,35 +28,35 @@
 #include <stdlib.h>
 #include <signal.h>
 
-bool process_status(const jack_status_t *stat)
+bool process_status(int stat)
 {
-	if (*stat & JackFailure) {
-		if (*stat & JackInitFailure)
+	if (stat & JackFailure) {
+		if (stat & JackInitFailure)
 			printf("Exited with JackInitFailure\n");
-		if (*stat & JackInvalidOption)
+		if (stat & JackInvalidOption)
 			printf("Exited with JackInvalidOption\n");
-		if (*stat & JackNameNotUnique)
+		if (stat & JackNameNotUnique)
 			printf("JackT is already runnning!\n");
-		if (*stat & JackServerFailed)
+		if (stat & JackServerFailed)
 			printf("Exited with JackServerFailed\n");
-		if (*stat & JackNoSuchClient)
+		if (stat & JackNoSuchClient)
 			printf("Exited with JackNoSuchClient\n");
-		if (*stat & JackLoadFailure)
+		if (stat & JackLoadFailure)
 			printf("Exited with JackLoadFailure\n");
-		if (*stat & JackShmFailure)
+		if (stat & JackShmFailure)
 			printf("Exited with JackShmFailure\n");
-		if (*stat & JackVersionError)
+		if (stat & JackVersionError)
 			printf("Exited with JackVersionError\n");
-		if (*stat * JackBackendError)
+		if (stat & JackBackendError)
 			printf("Exited with JackBackendError\n");
-		if (*stat & JackClientZombie)
+		if (stat & JackClientZombie)
 			printf("Exited with JackClientZombie\n");
 
 		return false;
-	} else if (*stat & JackServerStarted) {
+	} else if (stat & JackServerStarted) {
 		printf("Successfuly connected to JACK server\n");
 		return true;
-	} else if (*stat == 0)
+	} else if (stat == 0)
 		return true;
 	return false;
 }
@@ -138,7 +138,7 @@ int main(int argc, const char* argv[])
 	else
 		d.target = "system:playback_2";
 
-	if (!process_status(&status))
+	if (!process_status((int)status))
 		goto free;
 
 	/* Listen for shutdowns */
